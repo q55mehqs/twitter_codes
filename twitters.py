@@ -8,6 +8,42 @@ import json
 t = OAuth1Session(test.CK, test.CS, test.AT, test.AS)
 
 
+def tweet(text):
+    """文字のみのツイートの送信をします。
+    引数にツイートの投稿内容を入れてください。
+
+    Parameters
+    ----------
+    text : str
+      ツイートするワードを入れる引数。
+      ここに入れた文字がツイートされるだけです。
+    
+    Returns
+    -------
+    bool
+      投稿成功したらTrue、失敗ならFalseが返ります。
+      ちなみにそれぞれ結果がターミナルに出力されます。
+    """
+
+    # status/update エンドポイントURLです
+    URL = "https://api.twitter.com/1.1/statuses/update.json"
+
+    # 公式Docsからこのエンドポイントの説明が探し出せませんでした
+    _params = {"status" : text}
+
+    # 投げます
+    req = t.post(URL, params = _params)
+
+    # 投稿が成功したら req のstatus_codeが
+    # 200になるので、成功か失敗かを判別します。
+    if req.status_code == 200:
+        print("success")
+        return True
+    else:
+        print("failed Error Code: %s" % str(req.status_code))
+        return False
+
+
 def search(word, count=10, _type="recent"):
     """Twitterで検索する関数です
     word に探したい関数、countで検索したい件数を入れてください
@@ -55,12 +91,13 @@ def search(word, count=10, _type="recent"):
     # 上記パラメータで返る情報を格納しておきます
     req = t.get(URL, params = _params)
 
-    # json形式で帰ってきた値をdict型にした後、
-    # ツイートの内容が入っているstatusキーのvalueを格納します
-    res_data = json.loads(req.text)["statuses"]
+    if req.status_code == 200:
+        # json形式で帰ってきた値をdict型にした後、
+        # ツイートの内容が入っているstatusキーのvalueを格納します
+        res_data = json.loads(req.text)["statuses"]
 
-    # 上で格納したstatusキーの中身を返します
-    return res_data
+        # 上で格納したstatusキーの中身を返します
+        return res_data
 
 
 if __name__ == "__main__":
@@ -68,3 +105,5 @@ if __name__ == "__main__":
 
     for res in reses:
         print("%s: %s\n" % (res["user"]["name"], res["text"]))
+
+    tweet("こんなに説明を書きまくってるコード初めてって毎回言ってる気がする")
