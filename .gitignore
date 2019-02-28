@@ -1,0 +1,8 @@
+# 検証に使用した各logファイル
+*.log
+
+# トークンが入っている Python ファイル
+test_token.py
+
+# 特に不要なpycache
+__pycache__/
