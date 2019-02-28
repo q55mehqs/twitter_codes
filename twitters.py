@@ -1,3 +1,6 @@
+#coding: utf-8
+
+
 import test_token as test
 
 from requests_oauthlib import OAuth1Session
@@ -12,8 +15,8 @@ def tweet(text):
     """文字のみのツイートの送信をします。
     引数にツイートの投稿内容を入れてください。
 
-    Parameters
-    ----------
+    Parameter
+    ---------
     text : str
       ツイートするワードを入れる引数。
       ここに入れた文字がツイートされるだけです。
@@ -40,8 +43,101 @@ def tweet(text):
         print("success")
         return True
     else:
-        print("failed Error Code: %s" % str(req.status_code))
+        print("failed (Error Code: %s)" % str(req.status_code))
         return False
+
+
+def pic_makeid(pic_path):
+    """画像ツイートに必要なアップロード、
+    アップロードした画像のID取得をします。
+    この関数で行うのはTwitterサーバーに画像をアップロード
+    するだけです。ツイートはされないのでご注意ください。
+
+    Parameter
+    ---------
+    pic_path : str
+      アップロードする画像のファイルパスを入れる引数。
+    
+    Returns
+    -------
+    media_id : str
+      Twitterサーバーに画像を上げたとき生成されたIDを返します。
+      このIDをツイートのパラメータに入れることで画像ツイートが
+      できます。
+      アップロード失敗時は空文字列 ("") を返します。
+    """
+
+    URL = "https://upload.twitter.com/1.1/media/upload.json"
+
+    # 画像が開ければ続行、開けなければ例外処理し、
+    # Falseを返す
+    try:
+        data = open(pic_path, "rb")
+    except:
+        print("error file can't open")
+        return ""
+
+    # 開いた画像ファイルをそのままパラメータに格納
+    _pic_up_params = {"media": data}
+
+    # 画像をアップロード
+    _pic_up_req = t.post(URL, files = _pic_up_params)
+
+    # 画像アップロードが成功したらmedia_idを、
+    # 失敗してたらFalseを返します
+    if _pic_up_req.status_code == 200:
+        media_id = json.loads(_pic_up_req.text)["media_id_string"]
+        return media_id
+    else:
+        print("failed upload pic(Error Code: %s)" % str(_pic_up_req.status_code))
+        return ""
+
+
+def tweet_with_pic(text, pic_path):
+    """画像を含めたツイートの送信をします。
+    環境によっては動かないかも…(ノートPCで動かなかった)
+
+    Parameter
+    ---------
+    text : str
+      ツイートするワードを入れる引数。
+      ここに入れた文字がツイートされるだけです。
+    pic_path : str
+      アップロードする画像のファイルパスを入れる引数。
+    
+    Returns
+    -------
+    bool
+      投稿成功したらTrue、失敗ならFalseが返ります。
+      ちなみにそれぞれ結果がターミナルに出力されます。
+    """
+
+    # 文字のみ投稿と同様に、
+    # status/update エンドポイントURLを使用します。
+    URL = "https://api.twitter.com/1.1/statuses/update.json"
+
+    # media_id にアップロードした画像のidを格納します
+    media_id = pic_makeid(pic_path)
+
+    # 上の関数で画像アップロードが失敗したら
+    # 空文字列を返すことになっているので、文字があるときのみ
+    # 実行されるようにします
+    if media_id:
+        _params = {
+            "status": text,
+            "media_ids": media_id
+        }
+
+        # 投げます
+        _req = t.post(URL, params = _params)
+
+        if _req.status_code == 200:
+            print("success")
+            return True
+        else:
+            print("failed tweet(Error Code: %s)" % str(_req.status_code))
+            return False
+
 
 
 def search(word, count=10, _type="recent"):
@@ -101,9 +197,11 @@ def search(word, count=10, _type="recent"):
 
 
 if __name__ == "__main__":
-    reses = search("クソツイ", count=5)
+    # reses = search("クソツイ", count=5)
 
-    for res in reses:
-        print("%s: %s\n" % (res["user"]["name"], res["text"]))
+    # for res in reses:
+    #     print("%s: %s\n" % (res["user"]["name"], res["text"]))
 
-    tweet("こんなに説明を書きまくってるコード初めてって毎回言ってる気がする")
+    tweet("うーん…。")
+    # tweet_with_pic("投稿できてほしい", "./test.png")
+    # print(pic_makeid("./test.png"))
