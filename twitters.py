@@ -287,6 +287,8 @@ def timeline(count=10, since_id="", max_id="", no_catch_reply=True):
         "count": str(count),
     }
 
+    # dict1.update(dict2) <- dict1 に dict2 の中身を追加
+    # 一致するキーがあればvalueをdict2側に変更
     if since_id:
         _params.update({"since_id": since_id})
     if max_id:
@@ -362,6 +364,10 @@ def user_timeline(user_id="", screen_name="", count=10, since_id="", max_id="", 
         "count": str(count)
     }
 
+
+    # dict1.update(dict2) <- dict1 に dict2 の中身を追加
+    # 一致するキーがあればvalueをdict2側に変更
+
     # ユーザー指定
     if user_id:
         _params.update({"user_id": user_id})
@@ -409,7 +415,7 @@ if __name__ == "__main__":
     # for res in reses:
     #     print("%s: %s\n" % (res["user"]["name"], res["text"]))
 
-    # tweet("うーん…。")
+    # tweet_text("うーん…。")
     # tweet_with_pic("投稿できてほしい", "./test.png")
     # print(pic_makeid("./test.png"))
 
