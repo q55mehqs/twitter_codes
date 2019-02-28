@@ -169,6 +169,7 @@ def search(word, count=10, _type="recent"):
       のstatusキーの中身を返しているので、詳しくはそちらを参照し、
       適宜、値を取り出してください。
     """
+
     # search/tweets エンドポイントを使用して検索するので
     # エンドポイントURLは以下の通りになります
     URL = "https://api.twitter.com/1.1/search/tweets.json"
