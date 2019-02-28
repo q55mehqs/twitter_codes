@@ -9,7 +9,7 @@ import json
 t = OAuth1Session(test.CK, test.CS, test.AT, test.AS)
 
 
-def tweet(text):
+def tweet_text(text):
     """文字のみのツイートの送信をします。
     引数にツイートの投稿内容を入れてください。
 
@@ -137,6 +137,56 @@ def tweet_with_pic(text, pic_path):
             return False
 
 
+def tweet(text, pic_path="", reply_id=""):
+    """ツイートの送信をします。
+    引数にツイートの投稿内容を入れてください。
+    ツイート系のやつがオールインワンになってます。
+
+    Parameter
+    ---------
+    text : str
+      ツイートするワードを入れる引数。
+
+    pic_path : str
+      アップロードする画像のファイルパスを入れる引数。
+      デフォルトは空文字列。(画像投稿なし)
+
+    reply_id : str
+      ツイートへの返信をするときの返信元のidを入れる引数。
+      デフォルトは空文字列。(返信なし)
+    
+    Returns
+    -------
+    bool
+      投稿成功したらTrue、失敗ならFalseが返ります。
+      ちなみにそれぞれ結果がターミナルに出力されます。
+    """
+
+    # status/update エンドポイントURLです
+    URL = "https://api.twitter.com/1.1/statuses/update.json"
+
+    # パラメータをつくります
+    _params = {"status" : text}
+
+    # 画像ツイ、返信のときの対応をします
+    if pic_path:
+        _params.update({"media_ids": pic_makeid(pic_path)})
+    if reply_id:
+        _params.update({"in_reply_to_status_id": reply_id})
+
+    # 投げます
+    req = t.post(URL, params = _params)
+
+    # 投稿が成功したら req のstatus_codeが
+    # 200になるので、成功か失敗かを判別します。
+    if req.status_code == 200:
+        print("success")
+        return True
+    else:
+        print("failed (Error Code: %s)" % str(req.status_code))
+        return False
+
+
 def search(word, count=10, _type="recent"):
     """Twitterで検索する関数です
     word に探したい関数、countで検索したい件数を入れてください
@@ -194,7 +244,7 @@ def search(word, count=10, _type="recent"):
         return res_data
 
 
-def timeline(count=10, max_id="", reply=True):
+def timeline(count=10, since_id="", max_id="", no_catch_reply=True):
     """タイムラインを表示します。
 
     Parameters
@@ -202,23 +252,27 @@ def timeline(count=10, max_id="", reply=True):
     count : int
       何件のツイートを取得するか設定します。
       デフォルトは10(件)です。
+    since_id : str (or int)
+        ツイートのid(数字列)を選択すると、そのツイートを含まず、
+        これより未来のツイートを取得できます。
+        指定なしでも問題なく取得できます。デフォルトは指定なしです。
     max_id : str
       ツイートのid(数字列)を選択すると、そのツイートを含まず、
       これより過去のツイートを取得できます。
       指定なしでも問題なく取得できます。デフォルトは指定なしです。
-    reply : bool
+    no_catch_reply : bool
       取得するタイムラインに返信ツイートを含めるか指定します。
       Trueにすると除外、Falseにすると除外せず表示します。
       デフォルトは除外のTrueです。
 
-      Returns
+    Returns
     -------
     res_data : list, dict
       [{ツイートのデータ}, {ツイートのデータ}, ... *countの数]
       みたいに、countの数の分だけのdictの要素があるlistに
       なって返ってます。
       公式Docs <https://developer.twitter.com/en/docs/tweets/timelines/api-reference/get-statuses-home_timeline.html>
-      のstatusキーの中身を返しているので、詳しくはそちらを参照し、
+      の値を返しているので、詳しくはそちらを参照し、
       適宜、値を取り出してください。
     """
 
@@ -229,10 +283,12 @@ def timeline(count=10, max_id="", reply=True):
         "count": str(count),
     }
 
+    if since_id:
+        _params.update({"since_id": since_id})
     if max_id:
         _params.update({"max_id": max_id})
 
-    if reply:
+    if no_catch_reply:
         _params.update({"exclude_replies": "true"})
     else:
         _params.update({"exclude_replies": "false"})
@@ -248,6 +304,101 @@ def timeline(count=10, max_id="", reply=True):
         return res_data
 
 
+def user_timeline(user_id="", screen_name="", count=10, since_id="", max_id="", no_catch_reply=True, catch_rt=False):
+    """ユーザーを指定してタイムラインを取得します。
+    
+    Parameters
+    ----------
+    user_id : str (or int) // どっちでもいい
+        (screen_name かどちらか必須)取得したいユーザーをユーザーid(数字列)で選択します。
+        user_id も screen_name もどちらも入力されたときはこちらを優先します。
+        片方だけでいいです。
+
+    screen_name : str
+        (user_id かどちらか必須)取得したいユーザーをスクリーンネーム
+        (@Q55mEhQS の Q55... など)で選択します。
+
+    count : int (or str) // どっちでもいい
+        ツイートを取得する件数を選択します。デフォルトは10です。
+
+    since_id : str (or int)
+        ツイートのid(数字列)を選択すると、そのツイートを含まず、
+        これより未来のツイートを取得できます。
+        指定なしでも問題なく取得できます。デフォルトは指定なしです。
+
+    max_id : str (or int)
+        ツイートのid(数字列)を選択すると、そのツイートを含まず、
+        これより過去のツイートを取得できます。
+        指定なしでも問題なく取得できます。デフォルトは指定なしです。
+    
+    no_catch_reply : bool
+        取得するツイートに返信ツイートを含めるか選択します。
+        Trueだと含まない、Falseだと含みます。デフォルトはTrueです。
+    
+    catch_rt : bool
+        取得するツイートにリツイートを含めるか選択します。
+        Trueだと含む、Falseだと含みません。デフォルトはFalseです。
+    
+
+    Returns
+    -------
+    res_data : list, dict
+        [{ツイートのデータ}, {ツイートのデータ}, ... *countの数]
+        みたいに、countの数の分だけのdictの要素があるlistに
+        なって返ってます。
+        公式Docs <https://developer.twitter.com/en/docs/tweets/timelines/api-reference/get-statuses-user_timeline>
+        の値を返しているので、詳しくはそちらを参照し、
+        適宜、値を取り出してください。
+    """
+
+    URL = "https://api.twitter.com/1.1/statuses/user_timeline.json"
+
+    # 引数に合わせてパラメータを作っていきます
+    _params = {
+        "count": str(count)
+    }
+
+    # ユーザー指定
+    if user_id:
+        _params.update({"user_id": user_id})
+    elif screen_name:
+        _params.update({"screen_name": screen_name})
+    else:
+        print("ユーザーidかスクリーンネームのどちらかは必ず指定してください。")
+        return []
+
+    # since_id and max_id
+    if since_id:
+        _params.update({"since_id": since_id})
+    if max_id:
+        _params.update({"max_id": max_id})
+
+    # 返信の有無
+    if no_catch_reply:
+        _params.update({"exclude_replies": "true"})
+    else:
+        _params.update({"exclude_replies": "false"})
+
+    # RTの有無
+    if catch_rt:
+        _params.update({"include_rts": "true"})
+    else:
+        _params.update({"include_rts": "false"})
+
+    req = t.get(URL, params = _params)
+
+    if req.status_code == 200:
+        # json形式で帰ってきた値をdict型にした後、
+        # ツイートの内容が入っているstatusキーのvalueを格納します
+        res_data = json.loads(req.text)
+
+        # 上で格納したstatusキーの中身を返します
+        return res_data
+    else:
+        print("failed catch (Error Code: %s)" % str(req.status_code))
+        return []
+
+
 if __name__ == "__main__":
     # reses = search("クソツイ", count=5)
 
@@ -258,4 +409,8 @@ if __name__ == "__main__":
     # tweet_with_pic("投稿できてほしい", "./test.png")
     # print(pic_makeid("./test.png"))
 
-    print(timeline())
+    # print(timeline())
+    # tweet("ひとまとめにしてみたけど動くのかねぇ")
+
+    tweet_id = user_timeline(screen_name="Q55mEhQS", count=1)[0]["id"]
+    tweet("返信！！！", reply_id=tweet_id)
