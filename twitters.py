@@ -16,14 +16,14 @@ def tweet_text(text):
     Parameter
     ---------
     text : str
-      ツイートするワードを入れる引数。
-      ここに入れた文字がツイートされるだけです。
+        ツイートするワードを入れる引数。
+        ここに入れた文字がツイートされるだけです。
     
     Returns
     -------
     bool
-      投稿成功したらTrue、失敗ならFalseが返ります。
-      ちなみにそれぞれ結果がターミナルに出力されます。
+        投稿成功したらTrue、失敗ならFalseが返ります。
+        ちなみにそれぞれ結果がターミナルに出力されます。
     """
 
     # status/update エンドポイントURLです
@@ -54,15 +54,15 @@ def pic_makeid(pic_path):
     Parameter
     ---------
     pic_path : str
-      アップロードする画像のファイルパスを入れる引数。
+        アップロードする画像のファイルパスを入れる引数。
     
     Returns
     -------
     media_id : str
-      Twitterサーバーに画像を上げたとき生成されたIDを返します。
-      このIDをツイートのパラメータに入れることで画像ツイートが
-      できます。
-      アップロード失敗時は空文字列 ("") を返します。
+        Twitterサーバーに画像を上げたとき生成されたIDを返します。
+        このIDをツイートのパラメータに入れることで画像ツイートが
+        できます。
+        アップロード失敗時は空文字列 ("") を返します。
     """
 
     URL = "https://upload.twitter.com/1.1/media/upload.json"
@@ -98,16 +98,17 @@ def tweet_with_pic(text, pic_path):
     Parameter
     ---------
     text : str
-      ツイートするワードを入れる引数。
-      ここに入れた文字がツイートされるだけです。
+        ツイートするワードを入れる引数。
+        ここに入れた文字がツイートされるだけです。
+
     pic_path : str
-      アップロードする画像のファイルパスを入れる引数。
+        アップロードする画像のファイルパスを入れる引数。
     
     Returns
     -------
     bool
-      投稿成功したらTrue、失敗ならFalseが返ります。
-      ちなみにそれぞれ結果がターミナルに出力されます。
+        投稿成功したらTrue、失敗ならFalseが返ります。
+        ちなみにそれぞれ結果がターミナルに出力されます。
     """
 
     # 文字のみ投稿と同様に、
@@ -145,21 +146,21 @@ def tweet(text, pic_path="", reply_id=""):
     Parameter
     ---------
     text : str
-      ツイートするワードを入れる引数。
+        ツイートするワードを入れる引数。
 
     pic_path : str
-      アップロードする画像のファイルパスを入れる引数。
-      デフォルトは空文字列。(画像投稿なし)
+        アップロードする画像のファイルパスを入れる引数。
+        デフォルトは空文字列。(画像投稿なし)
 
     reply_id : str
-      ツイートへの返信をするときの返信元のidを入れる引数。
-      デフォルトは空文字列。(返信なし)
+        ツイートへの返信をするときの返信元のidを入れる引数。
+        デフォルトは空文字列。(返信なし)
     
     Returns
     -------
     bool
-      投稿成功したらTrue、失敗ならFalseが返ります。
-      ちなみにそれぞれ結果がターミナルに出力されます。
+        投稿成功したらTrue、失敗ならFalseが返ります。
+        ちなみにそれぞれ結果がターミナルに出力されます。
     """
 
     # status/update エンドポイントURLです
@@ -195,29 +196,29 @@ def search(word, count=10, _type="recent"):
     Parameters
     ----------
     word : str
-      検索したいワードを入れる引数。
-      since: やlang: など検索拡張子を入れても構いません。
+        検索したいワードを入れる引数。
+        since: やlang: など検索拡張子を入れても構いません。
 
     count : int
-      何個のツイートを取得するかを入れる引数。
-      範囲は 1~100、デフォルトは10です。
+        何個のツイートを取得するかを入れる引数。
+        範囲は 1~100、デフォルトは10です。
 
     _type : str
-      検索するツイートの種類を入れる引数。
-      "popular" 人気のツイート
-      "recent" 最新のツイート
-      "mixed" ミックス
-      いずれかで指定してください。デフォルトは recent です。
+        検索するツイートの種類を入れる引数。
+        "popular" 人気のツイート
+        "recent" 最新のツイート
+        "mixed" ミックス
+        いずれかで指定してください。デフォルトは recent です。
 
     Returns
     -------
     res_data : list, dict
-      [{ツイートのデータ}, {ツイートのデータ}, ... *countの数]
-      みたいに、countの数の分だけのdictの要素があるlistに
-      なって返ってます。
-      公式Docs <https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets.html>
-      のstatusキーの中身を返しているので、詳しくはそちらを参照し、
-      適宜、値を取り出してください。
+        [{ツイートのデータ}, {ツイートのデータ}, ... *countの数]
+        みたいに、countの数の分だけのdictの要素があるlistに
+        なって返ってます。
+        公式Docs <https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets.html>
+        のstatusキーの中身を返しているので、詳しくはそちらを参照し、
+        適宜、値を取り出してください。
     """
 
     # search/tweets エンドポイントを使用して検索するので
@@ -250,30 +251,33 @@ def timeline(count=10, since_id="", max_id="", no_catch_reply=True):
     Parameters
     ----------
     count : int
-      何件のツイートを取得するか設定します。
-      デフォルトは10(件)です。
+        何件のツイートを取得するか設定します。
+        デフォルトは10(件)です。
+
     since_id : str (or int)
         ツイートのid(数字列)を選択すると、そのツイートを含まず、
         これより未来のツイートを取得できます。
         指定なしでも問題なく取得できます。デフォルトは指定なしです。
+
     max_id : str
-      ツイートのid(数字列)を選択すると、そのツイートを含まず、
-      これより過去のツイートを取得できます。
-      指定なしでも問題なく取得できます。デフォルトは指定なしです。
+        ツイートのid(数字列)を選択すると、そのツイートを含まず、
+        これより過去のツイートを取得できます。
+        指定なしでも問題なく取得できます。デフォルトは指定なしです。
+
     no_catch_reply : bool
-      取得するタイムラインに返信ツイートを含めるか指定します。
-      Trueにすると除外、Falseにすると除外せず表示します。
-      デフォルトは除外のTrueです。
+        取得するタイムラインに返信ツイートを含めるか指定します。
+        Trueにすると除外、Falseにすると除外せず表示します。
+        デフォルトは除外のTrueです。
 
     Returns
     -------
     res_data : list, dict
-      [{ツイートのデータ}, {ツイートのデータ}, ... *countの数]
-      みたいに、countの数の分だけのdictの要素があるlistに
-      なって返ってます。
-      公式Docs <https://developer.twitter.com/en/docs/tweets/timelines/api-reference/get-statuses-home_timeline.html>
-      の値を返しているので、詳しくはそちらを参照し、
-      適宜、値を取り出してください。
+        [{ツイートのデータ}, {ツイートのデータ}, ... *countの数]
+        みたいに、countの数の分だけのdictの要素があるlistに
+        なって返ってます。
+        公式Docs <https://developer.twitter.com/en/docs/tweets/timelines/api-reference/get-statuses-home_timeline.html>
+        の値を返しているので、詳しくはそちらを参照し、
+        適宜、値を取り出してください。
     """
 
     URL = "https://api.twitter.com/1.1/statuses/home_timeline.json"
