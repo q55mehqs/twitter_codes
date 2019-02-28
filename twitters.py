@@ -4,9 +4,7 @@
 import test_token as test
 
 from requests_oauthlib import OAuth1Session
-
 import json
-
 
 t = OAuth1Session(test.CK, test.CS, test.AT, test.AS)
 
@@ -139,7 +137,6 @@ def tweet_with_pic(text, pic_path):
             return False
 
 
-
 def search(word, count=10, _type="recent"):
     """Twitterで検索する関数です
     word に探したい関数、countで検索したい件数を入れてください
@@ -196,12 +193,68 @@ def search(word, count=10, _type="recent"):
         return res_data
 
 
+def timeline(count=10, max_id="", reply=True):
+    """タイムラインを表示します。
+
+    Parameters
+    ----------
+    count : int
+      何件のツイートを取得するか設定します。
+      デフォルトは10(件)です。
+    max_id : str
+      ツイートのid(数字列)を選択すると、そのツイートを含まず、
+      これより過去のツイートを取得できます。
+      指定なしでも問題なく取得できます。デフォルトは指定なしです。
+    reply : bool
+      取得するタイムラインに返信ツイートを含めるか指定します。
+      Trueにすると除外、Falseにすると除外せず表示します。
+      デフォルトは除外のTrueです。
+
+      Returns
+    -------
+    res_data : list, dict
+      [{ツイートのデータ}, {ツイートのデータ}, ... *countの数]
+      みたいに、countの数の分だけのdictの要素があるlistに
+      なって返ってます。
+      公式Docs <https://developer.twitter.com/en/docs/tweets/timelines/api-reference/get-statuses-home_timeline.html>
+      のstatusキーの中身を返しているので、詳しくはそちらを参照し、
+      適宜、値を取り出してください。
+    """
+
+    URL = "https://api.twitter.com/1.1/statuses/home_timeline.json"
+
+    # 公式Docsに沿ってパラメータを指定します
+    _params = {
+        "count": str(count),
+    }
+
+    if max_id:
+        _params.update({"max_id": max_id})
+
+    if reply:
+        _params.update({"exclude_replies": "true"})
+    else:
+        _params.update({"exclude_replies": "false"})
+
+    req = t.get(URL, params = _params)
+
+    if req.status_code == 200:
+        # json形式で帰ってきた値をdict型にした後、
+        # ツイートの内容が入っているstatusキーのvalueを格納します
+        res_data = json.loads(req.text)
+
+        # 上で格納したstatusキーの中身を返します
+        return res_data
+
+
 if __name__ == "__main__":
     # reses = search("クソツイ", count=5)
 
     # for res in reses:
     #     print("%s: %s\n" % (res["user"]["name"], res["text"]))
 
-    tweet("うーん…。")
+    # tweet("うーん…。")
     # tweet_with_pic("投稿できてほしい", "./test.png")
     # print(pic_makeid("./test.png"))
+
+    print(timeline())
