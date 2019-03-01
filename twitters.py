@@ -12,6 +12,7 @@ t = OAuth1Session(test.CK, test.CS, test.AT, test.AS)
 def tweet_text(text):
     """文字のみのツイートの送信をします。
     引数にツイートの投稿内容を入れてください。
+    tweet関数でできることなのでそっち使う方いいかもしれないです
 
     Parameter
     ---------
@@ -94,6 +95,7 @@ def pic_makeid(pic_path):
 def tweet_with_pic(text, pic_path):
     """画像を含めたツイートの送信をします。
     環境によっては動かないかも…(ノートPCで動かなかった)
+    tweet関数では画像複数の投稿もできて便利です。そっち使う方おすすめです
 
     Parameter
     ---------
@@ -141,7 +143,6 @@ def tweet_with_pic(text, pic_path):
 def tweet(text, pic_paths=[], reply_id=""):
     """ツイートの送信をします。
     引数にツイートの投稿内容を入れてください。
-    ツイート系のやつがオールインワンになってます。
 
     Parameter
     ---------
