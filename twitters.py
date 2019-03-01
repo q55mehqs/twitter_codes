@@ -138,7 +138,7 @@ def tweet_with_pic(text, pic_path):
             return False
 
 
-def tweet(text, pic_path="", reply_id=""):
+def tweet(text, pic_paths=[], reply_id=""):
     """ツイートの送信をします。
     引数にツイートの投稿内容を入れてください。
     ツイート系のやつがオールインワンになってます。
@@ -148,8 +148,9 @@ def tweet(text, pic_path="", reply_id=""):
     text : str
         ツイートするワードを入れる引数。
 
-    pic_path : str
+    pic_paths : list
         アップロードする画像のファイルパスを入れる引数。
+        list型で画像のパスの文字列を入れてください。(1枚でもlistに)
         デフォルトは空文字列。(画像投稿なし)
 
     reply_id : str
@@ -169,9 +170,17 @@ def tweet(text, pic_path="", reply_id=""):
     # パラメータをつくります
     _params = {"status" : text}
 
-    # 画像ツイ、返信のときの対応をします
-    if pic_path:
-        _params.update({"media_ids": pic_makeid(pic_path)})
+    # 画像ツイの対応をします
+    if pic_paths:
+        pic_data = ""
+        for pic_path in pic_paths:
+            if not pic_data:
+                pic_data = pic_makeid(pic_path)
+            else:
+                pic_data = "%s,%s" % (pic_data, pic_makeid(pic_path))
+        _params.update({"media_ids": pic_data})
+    
+    # 返信の対応
     if reply_id:
         _params.update({"in_reply_to_status_id": reply_id})
 
@@ -416,11 +425,12 @@ if __name__ == "__main__":
     #     print("%s: %s\n" % (res["user"]["name"], res["text"]))
 
     # tweet_text("うーん…。")
-    tweet("ノートパソコンでも画像投稿できないかなぁ…？", pic_path="./test_niku.jpg")
+    # tweet("てすと", pic_paths=["./car_truck_hikkoshi.png"])
     # print(pic_makeid("./test.png"))
 
     # print(timeline())
     # tweet("ひとまとめにしてみたけど動くのかねぇ")
 
     # tweet_id = user_timeline(screen_name="Q55mEhQS", count=1)[0]["id"]
-    # tweet("返信！！！", reply_id=tweet_id)
+    # tweet("返信！！！", reply_id=tweet_id, pic_paths=["syokuji_hamburger_boy.png", "./syokuji_hamburger_girl.png"])
+    tweet("やったぜ。")
