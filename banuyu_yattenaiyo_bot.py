@@ -1,5 +1,7 @@
 """特定ユーザーに粘着して、最新ツイートに「{user_name}は{text(noum.)}やってないよ」
 って返信してくる意味わからないbot機能
+拾ったツイートに名詞が入ってなかったときの例外処理などは書いていません。
+twittersの関数の使用例として見てください。。。
 """
 
 from twitters import tweet, user_timeline
