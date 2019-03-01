@@ -24,7 +24,7 @@ def get_tweet_info(screen_name):
 
     Returns
     -------
-    list
+    tuple
         [0]ツイートid、[1]ユーザー名、[2]ツイート文字列を返します。
         すべてstr型です。
     """
