@@ -416,11 +416,11 @@ if __name__ == "__main__":
     #     print("%s: %s\n" % (res["user"]["name"], res["text"]))
 
     # tweet_text("うーん…。")
-    # tweet_with_pic("投稿できてほしい", "./test.png")
+    tweet("ノートパソコンでも画像投稿できないかなぁ…？", pic_path="./test_niku.jpg")
     # print(pic_makeid("./test.png"))
 
     # print(timeline())
     # tweet("ひとまとめにしてみたけど動くのかねぇ")
 
-    tweet_id = user_timeline(screen_name="Q55mEhQS", count=1)[0]["id"]
-    tweet("返信！！！", reply_id=tweet_id)
+    # tweet_id = user_timeline(screen_name="Q55mEhQS", count=1)[0]["id"]
+    # tweet("返信！！！", reply_id=tweet_id)
