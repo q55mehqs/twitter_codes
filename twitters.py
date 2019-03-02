@@ -3,10 +3,22 @@
 
 import test_token as test
 
+
 from requests_oauthlib import OAuth1Session
 import json
 
+
 t = OAuth1Session(test.CK, test.CS, test.AT, test.AS)
+
+
+class TweetError(Exception):
+    pass
+
+class TweetFileUploadError(Exception):
+    pass
+
+class ArgumentTypeError(Exception):
+    pass
 
 
 def tweet_text(text):
@@ -73,8 +85,8 @@ def pic_makeid(pic_path):
     try:
         data = open(pic_path, "rb")
     except:
-        print("error file can't open")
-        return ""
+        print("File open error")
+        return None
 
     # 開いた画像ファイルをそのままパラメータに格納
     _pic_up_params = {"media": data}
@@ -88,8 +100,8 @@ def pic_makeid(pic_path):
         media_id = json.loads(_pic_up_req.text)["media_id_string"]
         return media_id
     else:
-        print("failed upload pic(Error Code: %s)" % str(_pic_up_req.status_code))
-        return ""
+        print("Picture upload error: %s" % str(_pic_up_req.status_code))
+        return None
 
 
 def tweet_with_pic(text, pic_path):
@@ -105,12 +117,6 @@ def tweet_with_pic(text, pic_path):
 
     pic_path : str
         アップロードする画像のファイルパスを入れる引数。
-    
-    Returns
-    -------
-    bool
-        投稿成功したらTrue、失敗ならFalseが返ります。
-        ちなみにそれぞれ結果がターミナルに出力されます。
     """
 
     # 文字のみ投稿と同様に、
@@ -137,7 +143,7 @@ def tweet_with_pic(text, pic_path):
             return True
         else:
             print("failed tweet(Error Code: %s)" % str(_req.status_code))
-            return False
+            raise TweetFileUploadError("[Error: %s]画像のアップロードに失敗しました" % str(_req.status_code))
 
 
 def tweet(text, pic_paths=[], reply_id=""):
@@ -157,12 +163,6 @@ def tweet(text, pic_paths=[], reply_id=""):
     reply_id : str
         ツイートへの返信をするときの返信元のidを入れる引数。
         デフォルトは空文字列。(返信なし)
-    
-    Returns
-    -------
-    bool
-        投稿成功したらTrue、失敗ならFalseが返ります。
-        ちなみにそれぞれ結果がターミナルに出力されます。
     """
 
     # status/update エンドポイントURLです
@@ -173,6 +173,9 @@ def tweet(text, pic_paths=[], reply_id=""):
 
     # 画像ツイの対応をします
     if pic_paths:
+        if type(pic_paths) is not list:
+            raise ArgumentTypeError("画像の引数は1つでもlist型にしてください")
+
         pic_data = ""
         for pic_path in pic_paths:
             if not pic_data:
@@ -192,10 +195,8 @@ def tweet(text, pic_paths=[], reply_id=""):
     # 200になるので、成功か失敗かを判別します。
     if req.status_code == 200:
         print("success")
-        return True
     else:
-        print("failed (Error Code: %s)" % str(req.status_code))
-        return False
+        raise TweetError("[Error: %s]ツイートに失敗しました" % str(req.status_code))
 
 
 def search(word, count=10, _type="recent"):
@@ -434,4 +435,6 @@ if __name__ == "__main__":
 
     # tweet_id = user_timeline(screen_name="Q55mEhQS", count=1)[0]["id"]
     # tweet("返信！！！", reply_id=tweet_id, pic_paths=["syokuji_hamburger_boy.png", "./syokuji_hamburger_girl.png"])
-    tweet("やったぜ。")
+    # tweet("やったぜ。")
+
+    tweet("てす", pic_paths=["test_pictures/test_niku.jpg", "test_pictures/test.png"])
