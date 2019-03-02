@@ -3,6 +3,7 @@
 
 # トークンが入っている Python ファイル
 test_token.py
+tokens.py
 
 # 特に不要なpycache
 __pycache__/

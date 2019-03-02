@@ -1,7 +1,7 @@
 #coding: utf-8
 
 
-import test_token as test
+import tokens as test
 
 from requests_oauthlib import OAuth1Session
 import json
