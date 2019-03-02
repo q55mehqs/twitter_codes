@@ -104,6 +104,10 @@ def pic_makeid(pic_path):
         return None
 
 
+# ======================================
+# 現在、例外処理について検討中のコード
+# だれかにこの関数を使ってもらって意見を収集
+# ======================================
 def tweet_with_pic(text, pic_path):
     """画像を含めたツイートの送信をします。
     環境によっては動かないかも…(ノートPCで動かなかった)
@@ -142,10 +146,13 @@ def tweet_with_pic(text, pic_path):
             print("success")
             return True
         else:
-            print("failed tweet(Error Code: %s)" % str(_req.status_code))
             raise TweetFileUploadError("[Error: %s]画像のアップロードに失敗しました" % str(_req.status_code))
 
 
+# ======================================
+# 現在、例外処理について検討中のコード
+# だれかにこの関数を使ってもらって意見を収集
+# ======================================
 def tweet(text, pic_paths=[], reply_id=""):
     """ツイートの送信をします。
     引数にツイートの投稿内容を入れてください。
