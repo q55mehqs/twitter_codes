@@ -192,7 +192,8 @@ def tweet(text, pic_paths=[], reply_id=""):
     # 200になるので、成功か失敗かを判別します。
     if req.status_code == 200:
         print("success")
-        return True
+        res_id = json.loads(req.text)["id_str"]
+        return res_id
     else:
         print("failed (Error Code: %s)" % str(req.status_code))
         return False
@@ -419,19 +420,25 @@ def user_timeline(user_id="", screen_name="", count=10, since_id="", max_id="", 
         return []
 
 
+def favorite(tweet_id):
+    """引数で送られたidのツイートにファボを飛ばします。"""
+
+    URL = "https://api.twitter.com/1.1/favorites/create.json"
+
+    _params = {
+        "id": tweet_id
+    }
+
+    req = t.post(URL, params=_params)
+
+    if req.status_code == 200:
+        return True
+    else:
+        print("failed fav (Error Code: %s)" % str(req.status_code))
+        return False
+
+
 if __name__ == "__main__":
-    # reses = search("クソツイ", count=5)
-
-    # for res in reses:
-    #     print("%s: %s\n" % (res["user"]["name"], res["text"]))
-
-    # tweet_text("うーん…。")
-    # tweet("てすと", pic_paths=["./car_truck_hikkoshi.png"])
-    # print(pic_makeid("./test.png"))
-
-    # print(timeline())
-    # tweet("ひとまとめにしてみたけど動くのかねぇ")
-
-    # tweet_id = user_timeline(screen_name="Q55mEhQS", count=1)[0]["id"]
-    # tweet("返信！！！", reply_id=tweet_id, pic_paths=["syokuji_hamburger_boy.png", "./syokuji_hamburger_girl.png"])
-    tweet("やったぜ。")
+    # id_kijun = user_timeline(screen_name="Q55mEhQS")
+    tweet("てすと", pic_paths=["test_pictures/test_niku.jpg"])
+    print(user_timeline(screen_name="Q55mEhQS"))
