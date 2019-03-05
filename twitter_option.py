@@ -22,8 +22,9 @@ def isProtect(tweet : dict) -> bool:
         raise Exception("引数エラー ツイートがありません")
 
 
-def isOwner(tweet : dict, id_str : str, screen_name : str) -> bool:
+def isOwner(tweet, id_str="", screen_name=""):
     """拾ったツイートが自分のものでないかを判定します
+    型ヒントがないのはデフォルト有の書き方がわからないからです
 
     Parameters
     ----------
@@ -47,7 +48,7 @@ def isOwner(tweet : dict, id_str : str, screen_name : str) -> bool:
         if id_str:
             return tweet["user"]["id_str"] == id_str
         elif screen_name:
-            return tweet["user"]["id_str"] == screen_name
+            return tweet["user"]["screen_name"] == screen_name
         else:
             raise Exception("引数エラー id_str か screen_name は必ず入力してください")
     else:
@@ -68,7 +69,10 @@ def isAlreadyFavorited(tweet : dict) -> bool:
         ふぁぼ済みならTrue、まだならFalseを返します
     """
 
-    return tweet["favorited"]
+    if tweet:
+        return tweet["favorited"]
+    else:
+        raise Exception("引数エラー ツイートがありません")
 
 
 def isReply(tweet : dict) -> bool:
@@ -85,7 +89,10 @@ def isReply(tweet : dict) -> bool:
         返信ならTrue、そうでなければFalseを返します
     """
 
-    return bool(tweet["entities"]["user_mentions"])
+    if tweet:
+        return bool(tweet["entities"]["user_mentions"])
+    else:
+        raise Exception("引数エラー")
 
 
 def isForeignLanguage(tweet : dict) -> bool:
@@ -103,7 +110,21 @@ def isForeignLanguage(tweet : dict) -> bool:
         日本語が含まれていなければTrue、含まれていればFalseを返します
     """
 
-    if not tweet["lang"] == "ja":
-        return True
+    if tweet:
+        if not tweet["lang"] == "ja":
+            return True
+        else:
+            return False
     else:
-        return False
+        print("引数エラー ツイートがありません")
+
+
+if __name__ == "__main__":
+    from twitters import user_timeline
+    tweet = user_timeline(screen_name="Q55mEhQS", count=10, no_catch_reply=False)[0]
+    print(tweet["text"])
+
+    print("Protected: %s" % str(isProtect(tweet)))
+    print("Owner: %s" % str(isOwner(tweet, screen_name="Q55mEhQS")))
+    print("Reply: %s" % str(isReply(tweet)))
+    print("Lang!=ja: %s" % str(isForeignLanguage(tweet)))
