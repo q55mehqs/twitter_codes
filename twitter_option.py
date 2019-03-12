@@ -1,4 +1,7 @@
 """Twitterで拾ってきたツイートがどういうものかを判定します
+Falseのほうが扱いやすい(？)ツイートです
+引数がtimeline系やsearchのようなエンドポイントから取得した
+値になっていないとTypeErrorが発生します
 """
 
 def isProtect(tweet : dict) -> bool:
@@ -16,10 +19,7 @@ def isProtect(tweet : dict) -> bool:
         鍵垢ならTrue, 鍵じゃないならFalseを返します。
     """
 
-    if tweet:
-        return tweet["user"]["protected"]
-    else:
-        raise Exception("引数エラー ツイートがありません")
+    return tweet["user"]["protected"]
 
 
 def isOwner(tweet, id_str="", screen_name=""):
@@ -44,15 +44,12 @@ def isOwner(tweet, id_str="", screen_name=""):
     bool
         引数に入れたユーザーと同じならTrue, ちがうならFalseを返します
     """
-    if tweet:
-        if id_str:
-            return tweet["user"]["id_str"] == id_str
-        elif screen_name:
-            return tweet["user"]["screen_name"] == screen_name
-        else:
-            raise Exception("引数エラー id_str か screen_name は必ず入力してください")
+    if id_str:
+        return tweet["user"]["id_str"] == id_str
+    elif screen_name:
+        return tweet["user"]["screen_name"] == screen_name
     else:
-        raise Exception("引数エラー 比較するツイートがありません")
+        raise Exception("引数エラー id_str か screen_name は必ず入力してください")
 
 
 def isAlreadyFavorited(tweet : dict) -> bool:
@@ -69,10 +66,7 @@ def isAlreadyFavorited(tweet : dict) -> bool:
         ふぁぼ済みならTrue、まだならFalseを返します
     """
 
-    if tweet:
-        return tweet["favorited"]
-    else:
-        raise Exception("引数エラー ツイートがありません")
+    return tweet["favorited"]
 
 
 def isReply(tweet : dict) -> bool:
@@ -89,10 +83,7 @@ def isReply(tweet : dict) -> bool:
         返信ならTrue、そうでなければFalseを返します
     """
 
-    if tweet:
-        return bool(tweet["entities"]["user_mentions"])
-    else:
-        raise Exception("引数エラー")
+    return bool(tweet["entities"]["user_mentions"])
 
 
 def isForeignLanguage(tweet : dict) -> bool:
@@ -110,13 +101,10 @@ def isForeignLanguage(tweet : dict) -> bool:
         日本語が含まれていなければTrue、含まれていればFalseを返します
     """
 
-    if tweet:
-        if not tweet["lang"] == "ja":
-            return True
-        else:
-            return False
+    if not tweet["lang"] == "ja":
+        return True
     else:
-        print("引数エラー ツイートがありません")
+        return False
 
 
 def isAllCheck_or(tweet, id_str="", screen_name="") -> bool:
