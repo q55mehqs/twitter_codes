@@ -46,59 +46,90 @@ while True:
     # if acq[rand]["entities"]
     noum_aru = noum_check(tweet_trim)
 
-    if noum_aru and (not isAllCheck_or(acq[rand], screen_name="Q55mEhQS")): #if noum_aru == True:
+    if noum_aru and (not isAllCheck_or(acq[rand], screen_name="Q55mEhQS")):
         break
 
-print(tweet_trim)
+print(tweet_trim) # tweet_trim : すべてのCheckでFalseだった、かつ名詞がある文字列
 
 youso_list = lists_getter(tweet_trim)
 
 
-using_noum = []
-using_adj = []
-using_adv = []
-using_joshi = []
-using_aux = []
-using_verv = []
-# 使う名詞を選ぶ
-use = random_maker(youso_list[0])
-youso_list[0].remove(use) # 選択したやつを消す
-using_noum.append(use)
+class Uses:
+    using_noum = []
+    using_adj = []
+    using_adv = []
+    using_joshi = []
+    using_aux = []
+    using_verv = []
+
+    def __init__(self, youso_list):
+        self.youso_list = youso_list
+
+    def __random_maker(self, _list):
+        return _list[int(random.randint(0, (len(_list))))]
+
+    def use_set(self, num):
+        __use = self.__random_maker(self.youso_list[num])
+        self.youso_list[num].remove(__use)
+
+        if num == 0:
+            self.using_noum.append(__use)
+        elif num == 1:
+            self.using_adj.append(__use)
+        elif num == 2:
+            self.using_adv.append(__use)
+        elif num == 3:
+            self.using_joshi.append(__use)
+        elif num == 4:
+            self.using_aux.append(__use)
+        elif num == 5:
+            self.using_verv.append(__use)
+
+    def make_text(self, _type):
+        if _type == "noum":
+            _list = self.using_noum
+        elif _type == "adj":
+            _list = self.using_adj
+        elif _type == "adv":
+            _list = self.using_adv
+        elif _type == "joshi":
+            _list = self.using_joshi
+        elif _type == "aux":
+            _list = self.using_aux
+        elif _type == "verv":
+            _list = self.using_verv
+
+        _text = self.__random_maker(_list)
+        _list.remove(_text)
+        return _text
+
+uses = Uses(youso_list)
+
+# 名詞
+uses.use_set(0)
 
 while True:
-    if (random.choice([True, False])) and (youso_list[1] == True): # 形容詞
-        use = random_maker(youso_list[1])
-        youso_list[1].remove(use)
-        using_adj.append(use)
+    if (random.choice([True, False])) and uses.youso_list[1]: # 形容詞
+        uses.use_set(1)
     
-        if (random.choice([True, False])) and (youso_list[2] == True):
-            use = random_maker(youso_list[2])
-            youso_list[2].remove(use)
-            using_adv.append(use)
+        if (random.choice([True, False])) and uses.youso_list[2]: # 副詞
+            uses.use_set(2)
         
-    if youso_list[3] or youso_list[4]:
+    if uses.youso_list[3] or uses.youso_list[4]:
         route = random.randint(0, 2)
         if route == 0:
             pass
-        elif route == 1:
-            use = random_maker(youso_list[4])
-            youso_list[4].remove(use)
-            using_aux.append(use)
+        elif route == 1: # 助詞
+            uses.use_set(4)
 
             if youso_list[5] and random.choice([True, False]):
-                use = random_maker(youso_list[5])
-                youso_list[5].remove(use)
-                using_verv.append(use)
+                uses.use_set(5)
         else:
-            use = random_maker(youso_list[3])
-            youso_list[3].remove(use)
-            using_joshi.append(use)
+            uses.use_set(3)
     
-    if youso_list[0]:
+    if uses.youso_list[0]:
         if random.choice([True, False]):
-            use = random_maker(youso_list[0])
-            youso_list[0].remove(use) # 選択したやつを消す
-            using_noum.append(use)
+            uses.use_set(0)
         else:
             break
     else:
@@ -106,31 +137,19 @@ while True:
 
 word = ""
 
-while using_noum:
-    if using_adv:
-        _use = random_maker(using_adv)
-        using_adv.remove(_use)
-        word += _use
-    if using_adj:
-        _use = random_maker(using_adj)
-        using_adj.remove(_use)
-        word += _use
-    if using_noum:
-        _use = random_maker(using_noum)
-        using_noum.remove(_use)
-        word += _use
-    if using_joshi:
-        _use = random_maker(using_aux)
-        using_aux.remove(_use)
-        word += _use
-        if using_verv:
-            _use = random_maker(using_verv)
-            using_verv.remove(_use)
-            word += _use
-    if using_aux:
-        _use = random_maker(using_aux)
-        using_aux.remove(_use)
-        word += _use
+while uses.using_noum:
+    if uses.using_adv:
+        word += uses.make_text("adv")
+    if uses.using_adj:
+        word += uses.make_text("adj")
+    if uses.using_noum:
+        word += uses.make_text("noum")
+    if uses.using_joshi:
+        word += uses.make_text("joshi")
+        if uses.using_verv:
+            word += uses.make_text("verv")
+    if uses.using_aux:
+        word += uses.make_text("aux")
 
 print(word)
 
