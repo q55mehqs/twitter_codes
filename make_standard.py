@@ -1,8 +1,10 @@
 # coding: utf-8
 
-from twitters import timeline
+from twitters import Twitter
 
-res = timeline(count=1)
+twitter = Twitter()
+
+res = twitter.timeline(count=1)
 
 PATH = "./id_kijun.log"
 

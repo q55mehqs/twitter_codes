@@ -1,4 +1,4 @@
-from twitters import timeline, user_timeline, tweet, favorite
+from twitters import Twitter
 from twitter_option import isAllCheck_or
 
 from numpy import random
@@ -6,6 +6,8 @@ import re
 
 from kaiseki import noum_check, lists_getter
 
+
+twitter = Twitter()
 
 def format_text(text):
     '''
@@ -32,8 +34,8 @@ PATH = "./id_kijun.log"
 with open(PATH) as f:
     bef_id = f.read()
 
-# acq = timeline(since_id=bef_id)
-acq = timeline(count=200)
+acq = twitter.timeline(since_id=bef_id)
+# acq = twitter.timeline(count=200)
 
 while True:
     rand = random.randint(0, len(acq))
@@ -132,9 +134,9 @@ while using_noum:
 
 print(word)
 
-# favorite(acq[rand]["id_str"])
+# twitter.favorite(acq[rand]["id_str"])
 
-# id_str = tweet("ばぬゆー%sやんないよ" % word)
+# id_str = twitter.tweet("ばぬゆー%sやんないよ" % word)
 
 # with open(PATH, mode="w") as f:
 #     f.write(id_str)
