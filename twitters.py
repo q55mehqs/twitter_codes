@@ -125,7 +125,7 @@ def tweet(text, pic_paths=[], reply_id=""):
             else:
                 pic_data = "%s,%s" % (pic_data, pic_makeid(pic_path))
         _params.update({"media_ids": pic_data})
-    
+
     # 返信の対応
     if reply_id:
         _params.update({"in_reply_to_status_id": reply_id})
