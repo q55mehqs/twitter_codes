@@ -39,10 +39,10 @@ import json
 
 class Twitter:
     def __init__(self, CK=test.CK, CS=test.CS, AT=test.AT, AS=test.AS):
-        self.t = OAuth1Session(CK, CS, AT, AS)
+        self.__t = OAuth1Session(CK, CS, AT, AS)
 
 
-    def pic_makeid(self, pic_path):
+    def __pic_makeid(self, pic_path):
         """画像ツイートに必要なアップロード、
         アップロードした画像のID取得をします。
         この関数で行うのはTwitterサーバーに画像をアップロード
@@ -76,7 +76,7 @@ class Twitter:
         _pic_up_params = {"media": data}
 
         # 画像をアップロード
-        _pic_up_req = self.t.post(URL, files = _pic_up_params)
+        _pic_up_req = self.__t.post(URL, files = _pic_up_params)
 
         # 画像アップロードが成功したらmedia_idを、
         # 失敗してたらFalseを返します
@@ -124,9 +124,9 @@ class Twitter:
             pic_data = ""
             for pic_path in pic_paths:
                 if not pic_data:
-                    pic_data = self.pic_makeid(pic_path)
+                    pic_data = self.__pic_makeid(pic_path)
                 else:
-                    pic_data = "%s,%s" % (pic_data, self.pic_makeid(pic_path))
+                    pic_data = "%s,%s" % (pic_data, self.__pic_makeid(pic_path))
             _params.update({"media_ids": pic_data})
 
         # 返信の対応
@@ -134,7 +134,7 @@ class Twitter:
             _params.update({"in_reply_to_status_id": reply_id})
 
         # 投げます
-        req = self.t.post(URL, params = _params)
+        req = self.__t.post(URL, params = _params)
 
         # 投稿が成功したら req のstatus_codeが
         # 200になるので、成功か失敗かを判別します。
@@ -193,7 +193,7 @@ class Twitter:
         }
 
         # 上記パラメータで返る情報を格納しておきます
-        req = self.t.get(URL, params = _params)
+        req = self.__t.get(URL, params = _params)
 
         if req.status_code == 200:
             # json形式で帰ってきた値をdict型にした後、
@@ -258,7 +258,7 @@ class Twitter:
         else:
             _params.update({"exclude_replies": "false"})
 
-        req = self.t.get(URL, params = _params)
+        req = self.__t.get(URL, params = _params)
 
         if req.status_code == 200:
             # json形式で帰ってきた値をdict型にした後、
@@ -354,7 +354,7 @@ class Twitter:
         else:
             _params.update({"include_rts": "false"})
 
-        req = self.t.get(URL, params = _params)
+        req = self.__t.get(URL, params = _params)
 
         if req.status_code == 200:
             # json形式で帰ってきた値をdict型にした後、
@@ -377,7 +377,7 @@ class Twitter:
             "id": tweet_id
         }
 
-        req = self.t.post(URL, params=_params)
+        req = self.__t.post(URL, params=_params)
 
         if req.status_code == 200:
             return True
