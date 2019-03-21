@@ -2,43 +2,44 @@
 Twitters
 ========
 ツイッターサーバーとHTTP通信でPOST/GETのやりとりをします
-
-How to Use
-----------
-あらかじめ tokens.py ファイルを同ディレクトリに作成し、
-
-    >>> CK = {Twitter API's Consumer Key}
-    >>> CS = {Consumer Key Secret}
-    >>> AT = {Access Token}
-    >>> AS = {Access Token Secret}
-
-という形式でファイルを作成してください。
-(Linuxを使用している場合、settings.shを実行すると
-対話形式でtokensファイルを作成できます)
-
-
-Examples
---------
-    >>> tweet('テスト APIから送信',
-    ...       pic_paths=[
-    ...           'picture_path_1.jpg',
-    ...           'picture_path_2.png'])
-success (Twitterに画像付きツイートが投稿される)
-
-Notes
------
-その他は各関数のdocstringを参照してください。
 """
 
-
-import tokens as test
+# try:
+#     import tokens as test
+# except ImportError:
+#     pass
 
 from requests_oauthlib import OAuth1Session
 import json
 
 
 class Twitter:
-    def __init__(self, CK=test.CK, CS=test.CS, AT=test.AT, AS=test.AS):
+    """Twitterに関する操作の実行をします。
+
+    使い方
+    ======
+    最初に、インスタンスをこのような書式で生成してください
+
+        >>> from twitters import Twitter
+        >>> t = Twitter("{Consumer Key}", "{Consumer Key Secret}",
+        ...         "{Access Token}", "{Access Token Secret}")
+
+    ツイートをする
+    --------------
+        >>> t.tweet("ツイート文")
+        ... # 画像ツイート、返信の指定方法はtweetのdocstringを
+        ... # 参照してください
+
+    検索
+    ----
+        >>> t.search("検索ワード")
+        [{'created_at': 'Mon Mar 04 16:02:06 +0000 2019', ... }]
+
+    ふぁぼ
+    ------
+        >>> t.favorite("{Tweet ID}")
+    """
+    def __init__(self, CK, CS, AT, AS):
         self.__t = OAuth1Session(CK, CS, AT, AS)
 
 
@@ -386,17 +387,14 @@ class Twitter:
             return False
 
 
-# if __name__ == "__main__":
-#     tweet("テキスト")
-#     tweet("画像", pic_path="test_pictures/test_niku.jpg")
-#     search("検索", count=10, _type="popular")
-#     timeline_tweets = timeline()
-#     for timeline_tweet in timeline_tweets:
-#         print("%s(%s): %s\n" % (
-#             timeline_tweet["user"]["name"], 
-#             timeline_tweet["user"]["screen_name"], 
-#             timeline_tweet["text"])
-#         )
-#     user_tweets = user_timeline(screen_name="Q55mEhQS")
-#     tweet("返信", reply_id=user_tweets[0]["id"])
-#     favorite(user_tweets[0]["id"])
+if __name__ == "__main__":
+    import tokens
+    t = Twitter(tokens.CK, tokens.CS, tokens.AT, tokens.AS)
+
+    t.tweet("てすと")
+    print(t.search("#RakutenEagles", count=2))
+    print(t.timeline(count=3))
+    user_tweets = t.user_timeline(screen_name="Q55mEhQS", count=2)
+
+    for user_tweet in user_tweets:
+        t.favorite(user_tweet["id_str"])
