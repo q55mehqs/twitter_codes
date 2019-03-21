@@ -30,8 +30,10 @@ Notes
 その他は各関数のdocstringを参照してください。
 """
 
-
-import tokens as test
+try:
+    import tokens as test
+except ImportError:
+    pass
 
 from requests_oauthlib import OAuth1Session
 import json
