@@ -1,4 +1,19 @@
 from twitters import Twitter
+
+try:
+    import tokens
+    twitter = Twitter(tokens.CK, tokens.CS,
+            tokens.AT, tokens.AS)
+except ImportError:
+    # tokensファイルを作成しない場合、
+    # ここにキー、トークンを入力
+    CK = ""
+    CS = ""
+    AT = ""
+    AS = ""
+
+    twitter = Twitter(CK, CS, AT, AS)
+
 from twitter_option import isAllCheck_or
 
 from numpy import random
@@ -6,8 +21,6 @@ import re
 
 from kaiseki import noum_check, lists_getter
 
-
-twitter = Twitter()
 
 def format_text(text):
     '''
@@ -153,9 +166,9 @@ while uses.using_noum:
 
 print(word)
 
-# twitter.favorite(acq[rand]["id_str"])
+twitter.favorite(acq[rand]["id_str"])
 
-# id_str = twitter.tweet("ばぬゆー%sやんないよ" % word)
+id_str = twitter.tweet("ばぬゆー%sやんないよ" % word)
 
-# with open(PATH, mode="w") as f:
-#     f.write(id_str)
+with open(PATH, mode="w") as f:
+    f.write(id_str)

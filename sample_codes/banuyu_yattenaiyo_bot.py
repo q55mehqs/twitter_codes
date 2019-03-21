@@ -4,7 +4,22 @@
 twittersの関数の使用例として見てください。。。
 """
 
-from twitters import tweet, user_timeline
+from twitters import Twitter
+
+try:
+    import tokens
+    twitter = Twitter(tokens.CK, tokens.CS,
+            tokens.AT, tokens.AS)
+except ImportError:
+    # tokensファイルを作成しない場合、
+    # ここにキー、トークンを入力
+    CK = ""
+    CS = ""
+    AT = ""
+    AS = ""
+
+    twitter = Twitter(CK, CS, AT, AS)
+
 
 from janome.tokenizer import Tokenizer
 
@@ -28,7 +43,7 @@ def get_tweet_info(screen_name):
         [0]ツイートid、[1]ユーザー名、[2]ツイート文字列を返します。
         すべてstr型です。
     """
-    tweet_data = user_timeline(screen_name=screen_name, count=1)[0]
+    tweet_data = twitter.user_timeline(screen_name=screen_name, count=1)[0]
 
     return tweet_data["id_str"], tweet_data["user"]["name"], tweet_data["text"]
 
@@ -64,4 +79,4 @@ if __name__ == "__main__":
     rep_text = "@%s %sは%sやってないよ" % (screen_name ,tweet_info[1], noum)
     print(rep_text)
 
-    tweet(rep_text, reply_id=tweet_info[0])
+    twitter.tweet(rep_text, reply_id=tweet_info[0])

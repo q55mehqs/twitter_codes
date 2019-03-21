@@ -136,7 +136,9 @@ def isAllCheck_or(tweet, id_str="", screen_name="") -> bool:
 
 if __name__ == "__main__":
     from twitters import Twitter
-    twitter = Twitter()
+    import tokens
+    twitter = Twitter(tokens.CK, tokens.CS,
+            tokens.AT, tokens.AS)
 
     tweet = twitter.user_timeline(screen_name="Q55mEhQS", count=10, no_catch_reply=False)[0]
     print(tweet["text"])

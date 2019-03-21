@@ -2,7 +2,19 @@
 
 from twitters import Twitter
 
-twitter = Twitter()
+try:
+    import tokens
+    twitter = Twitter(tokens.CK, tokens.CS,
+            tokens.AT, tokens.AS)
+except ImportError:
+    # tokensファイルを作成しない場合、
+    # ここにキー、トークンを入力
+    CK = ""
+    CS = ""
+    AT = ""
+    AS = ""
+
+    twitter = Twitter(CK, CS, AT, AS)
 
 res = twitter.timeline(count=1)
 
