@@ -24,7 +24,7 @@ def format_text(text):
 
 
 def random_maker(_list):
-    return int(random.randint(0, (len(_list))))
+    return _list[int(random.randint(0, (len(_list))))]
 
 
 PATH = "./id_kijun.log"
@@ -59,18 +59,18 @@ using_joshi = []
 using_aux = []
 using_verv = []
 # 使う名詞を選ぶ
-use = youso_list[0][random_maker(youso_list[0])]
+use = random_maker(youso_list[0])
 youso_list[0].remove(use) # 選択したやつを消す
 using_noum.append(use)
 
 while True:
     if (random.choice([True, False])) and (youso_list[1] == True): # 形容詞
-        use = youso_list[1][random_maker(youso_list[1])]
+        use = random_maker(youso_list[1])
         youso_list[1].remove(use)
         using_adj.append(use)
     
         if (random.choice([True, False])) and (youso_list[2] == True):
-            use = youso_list[2][random_maker(youso_list[2])]
+            use = random_maker(youso_list[2])
             youso_list[2].remove(use)
             using_adv.append(use)
         
@@ -79,22 +79,22 @@ while True:
         if route == 0:
             pass
         elif route == 1:
-            use = youso_list[4][random_maker(youso_list[4])]
+            use = random_maker(youso_list[4])
             youso_list[4].remove(use)
             using_aux.append(use)
 
             if youso_list[5] and random.choice([True, False]):
-                use = youso_list[5][random_maker(youso_list[5])]
+                use = random_maker(youso_list[5])
                 youso_list[5].remove(use)
                 using_verv.append(use)
         else:
-            use = youso_list[3][random_maker(youso_list[3])]
+            use = random_maker(youso_list[3])
             youso_list[3].remove(use)
             using_joshi.append(use)
     
     if youso_list[0]:
         if random.choice([True, False]):
-            use = youso_list[0][random_maker(youso_list[0])]
+            use = random_maker(youso_list[0])
             youso_list[0].remove(use) # 選択したやつを消す
             using_noum.append(use)
         else:
@@ -106,27 +106,27 @@ word = ""
 
 while using_noum:
     if using_adv:
-        _use = using_adv[random_maker(using_adv)]
+        _use = random_maker(using_adv)
         using_adv.remove(_use)
         word += _use
     if using_adj:
-        _use = using_adj[random_maker(using_adj)]
+        _use = random_maker(using_adj)
         using_adj.remove(_use)
         word += _use
     if using_noum:
-        _use = using_noum[random_maker(using_noum)]
+        _use = random_maker(using_noum)
         using_noum.remove(_use)
         word += _use
     if using_joshi:
-        _use = using_aux[random_maker(using_aux)]
+        _use = random_maker(using_aux)
         using_aux.remove(_use)
         word += _use
         if using_verv:
-            _use = using_verv[random_maker(using_verv)]
+            _use = random_maker(using_verv)
             using_verv.remove(_use)
             word += _use
     if using_aux:
-        _use = using_aux[random_maker(using_aux)]
+        _use = random_maker(using_aux)
         using_aux.remove(_use)
         word += _use
 
