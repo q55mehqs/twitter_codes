@@ -39,27 +39,9 @@ ReadとWriteは必ずできるようにしてください。
 
 git の操作ができる環境で、適当なディレクトリに移り、
 
-    git clone https://github.com/q55mehqs/twitter_codes.git
+    git clone -b branch https://github.com/q55mehqs/twitter_codes.git
 
-と入力し、
-
-    git branch -a
-
-と打って
-
-    * master
-      remotes/origin/HEAD -> origin/master
-      remotes/origin/develop
-      remotes/origin/issues1
-      remotes/origin/master
-
-となることを確認してください。
-
-そして、
-
-    git checkout develop
-
-と打ち、develop ブランチに切り替えてください。
+と入力してください。
 
 
 ### 各キー、トークンの処理
@@ -84,7 +66,7 @@ git の操作ができる環境で、適当なディレクトリに移り、
 
 making_code.py
 
-    from twitter_example.twitters import Twitter
+    from twitter_example import Twitter
 
     # CK, CS, AT, AS 変数にキー、トークンを代入
 
