@@ -387,14 +387,14 @@ class Twitter:
             return False
 
 
-if __name__ == "__main__":
-    import tokens
-    t = Twitter(tokens.CK, tokens.CS, tokens.AT, tokens.AS)
+# if __name__ == "__main__":
+#     import tokens
+#     t = Twitter(tokens.CK, tokens.CS, tokens.AT, tokens.AS)
 
-    t.tweet("てすと")
-    print(t.search("#RakutenEagles", count=2))
-    print(t.timeline(count=3))
-    user_tweets = t.user_timeline(screen_name="Q55mEhQS", count=2)
+#     t.tweet("てすと")
+#     print(t.search("#RakutenEagles", count=2))
+#     print(t.timeline(count=3))
+#     user_tweets = t.user_timeline(screen_name="Q55mEhQS", count=2)
 
-    for user_tweet in user_tweets:
-        t.favorite(user_tweet["id_str"])
+#     for user_tweet in user_tweets:
+#         t.favorite(user_tweet["id_str"])

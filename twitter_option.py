@@ -134,17 +134,17 @@ def isAllCheck_or(tweet, id_str="", screen_name="") -> bool:
             isReply(tweet) or isForeignLanguage(tweet))
 
 
-if __name__ == "__main__":
-    from twitters import Twitter
-    import tokens
-    twitter = Twitter(tokens.CK, tokens.CS,
-            tokens.AT, tokens.AS)
+# if __name__ == "__main__":
+#     from twitters import Twitter
+#     import tokens
+#     twitter = Twitter(tokens.CK, tokens.CS,
+#             tokens.AT, tokens.AS)
 
-    tweet = twitter.user_timeline(screen_name="Q55mEhQS", count=10, no_catch_reply=False)[0]
-    print(tweet["text"])
+#     tweet = twitter.user_timeline(screen_name="Q55mEhQS", count=10, no_catch_reply=False)[0]
+#     print(tweet["text"])
 
-    print("Protected: %s" % str(isProtect(tweet)))
-    print("Owner: %s" % str(isOwner(tweet, screen_name="Q55mEhQS")))
-    print("Reply: %s" % str(isReply(tweet)))
-    print("Lang!=ja: %s" % str(isForeignLanguage(tweet)))
-    print("all: %s" % str(isAllCheck_or(tweet, screen_name="Q55mEhQS")))
+#     print("Protected: %s" % str(isProtect(tweet)))
+#     print("Owner: %s" % str(isOwner(tweet, screen_name="Q55mEhQS")))
+#     print("Reply: %s" % str(isReply(tweet)))
+#     print("Lang!=ja: %s" % str(isForeignLanguage(tweet)))
+#     print("all: %s" % str(isAllCheck_or(tweet, screen_name="Q55mEhQS")))
